@@ -34,9 +34,13 @@ rotororder = [cog5, cog3, cog2]  # This places the rotors into the 3 slots
 rotor1preset = "z"  # This is what letter the first rotor shifts the first letter to
 rotor2preset = "f"  # This is what letter the second rotor shifts the first letter to
 rotor3preset = "l"  # This is what letter the third rotor shifts the first letter to
-rotororder[0] = np.roll(rotororder[0], alphabetpos.index(rotor1preset))
-rotororder[1] = np.roll(rotororder[1], alphabetpos.index(rotor2preset))
-rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset))
+rotororder[0] = np.roll(rotororder[0], alphabetpos.index(rotor1preset)+2)
+rotororder[1] = np.roll(rotororder[1], alphabetpos.index(rotor2preset)+2)
+rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset)+2)
+#  the module above converts it to its own type of array so it needs to be converted back to a regular list to be used again
+rotororder[0] = list(rotororder[0])
+rotororder[1] = list(rotororder[1])
+rotororder[2] = list(rotororder[2])
 # Each letter will be shifted 3 times then each rotor will rotate its given turns
 
 reflector = [["a","j"],["c","b"],["e","z"],["g","x"],["i","r"],["k","p"],["m","d"],["o","f"],["q","h"],["s","p"],["u","l"],["w","n"],["y","t"]]
@@ -45,22 +49,40 @@ reflector = [["a","j"],["c","b"],["e","z"],["g","x"],["i","r"],["k","p"],["m","d
 plaintext = input("Enter message:\n")  # This is what the user inputs
 separated = list(plaintext)  # Splits up the text input into each character and places into a list
 plugboardtext = []  # This will be the text after the input letters are substituted in the configured way
+firstrotor = []  # This list will be the text after going through the first rotor
+secondrotor = []  # This list will be the text after going through the second rotor
+thirdrotor = []  # This list will be the text after going through the third rotor
+reflected = []  # This list will be the text after going through the reflector
+backwardthird = []  # This list will be the text after coming back through the third rotor
+backwardsecond = []  # This list will be the text after coming back through the second rotor
+backwardfirst = []  # This list will be the text after coming back through the first rotor
+#  Above is more to better show every time each letter is shifted
+
 finalseparated = []  # This will be where the final text will be spliced into
 
 for i in range(0, len(separated)):
-    if separated[i] in alphabetpos: # this will ignore non-alphabet characters such as spaces/punctuation/numbers
+    if separated[i] in alphabetpos:  # this will ignore non-alphabet characters such as spaces/punctuation/numbers
         plugboardtext.append(plugboard[alphabetpos.index(separated[i])][1])
 # This iteratively appends each substituted letter of the user's input to the plugboardtext list
 
 for i in range(0, len(plugboardtext)):
-    finalseparated[i] = plugboardtext[i]
+    firstrotor.append(rotororder[0][alphabetpos.index(plugboardtext[i])])
+    secondrotor.append(rotororder[1][rotororder[0].index(plugboardtext[i])])
+    thirdrotor.append(rotororder[2][rotororder[1].index(plugboardtext[i])])
 
-    np.roll(rotororder[0],1)
+    np.roll(rotororder[0], 1)
+    rotororder[0] = list(rotororder[0])
     if rotororder[0] == rotor1preset:
-        np.roll(rotororder[1],1)
+        np.roll(rotororder[1], 1)
+        rotororder[1] = list(rotororder[1])
         if rotororder[1] == rotor2preset:
-            np.roll(rotororder[2],1)
+            np.roll(rotororder[2], 1)
+            rotororder[2] = list(rotororder[2])
+print(firstrotor)
+print(secondrotor)
+print(thirdrotor)
+print(rotororder[1])
 
-finaltext = ''.join(i for i in finalseparated)
-print(finaltext)
+#finaltext = ''.join(i for i in finalseparated)
+#print(finaltext)
 
