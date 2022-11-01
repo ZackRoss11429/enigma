@@ -17,19 +17,19 @@ cog5 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o
 plugboard = [["a", "f"], ["b", "b"], ["c", "z"], ["d", "d"], ["e", "e"], ["f", "a"], ["g", "m"], ["h", "i"], ["i", "h"],
              ["j,t"], ["k", "n"], ["l", "y"], ["m", "g"], ["n", "k"], ["o", "s"], ["p", "p"], ["q", "v"], ["r", "r"],
              ["s", "o"], ["t", "j"], ["u", "u"], ["v", "q"], ["w", "w"], ["x", "x"], ["y", "l"], ["z", "c"]]
+# plugboard which is configured to substitute up to 10 letters with other letters
 # maximum 10 substitutions (switch both related letter indexes)
 
-alphabetpos = ["0", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
                "u", "v", "w", "x", "y", "z"]
 
-rotororder = [cog5, cog3, cog2]
-plaintext = input("Enter message:\n")
-separated = list(plaintext)
-plugboardtext = []
-print(separated)
-print(rotororder)
-print(plugboard)
+rotororder = [cog5, cog3, cog2]  # This places the rotors into the 3 slots
+plaintext = input("Enter message:\n")  # This is what the user inputs
+separated = list(plaintext) # Splits up the text input into each character and places into a list
+plugboardtext = [] # This will be the text after the input letters are substituted in the configured way
 for i in range(0, len(separated)):
-    #plugboardtext.append(plugboard[plugboard.index(alphabetpos.index[plugboard[i]]), 1])
-    plugboardtext.append(plugboard[alphabetpos.index(separated[i])])
+    if separated[i] in alphabetpos: # this will ignore non-alphabet characters such as spaces/punctuation/numbers
+        plugboardtext.append(plugboard[alphabetpos.index(separated[i])][1])
+# This iteratively appends each substituted letter of the user's input to the plugboardtext list
+
 print(plugboardtext)
