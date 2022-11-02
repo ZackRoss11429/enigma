@@ -23,17 +23,18 @@ cog5 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o
         "w", "x", "y", "z"]
 # every rotor has the alphabet on each side. Each is preset at a particular letter.
 # Every letter that's inputted will go through each rotor then into a reflector which pairs every letter.
-# The new letter will then go backwards through the rotors and substituted to its final form.
+# The new letter will then go backwards through the rotors and shifted , then finally gone through the plugboard again.
 # Every letter cycle, the rotor will rotate once. When a full revolution of the first is done, the second one rotates by one.
 # When the second rotor fully rotates, the third will rotate once.
 
 alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
                "u", "v", "w", "x", "y", "z"]
+# this list helps compare the positioning of the before and after of going through the rotors
 
 rotororder = [cog5, cog3, cog2]  # This places the rotors into the 3 slots
 rotor1preset = "z"  # This is what letter the first rotor shifts the first letter to
-rotor2preset = "f"  # This is what letter the second rotor shifts the first letter to
-rotor3preset = "l"  # This is what letter the third rotor shifts the first letter to
+rotor2preset = "k"  # This is what letter the second rotor shifts the first letter to
+rotor3preset = "g"  # This is what letter the third rotor shifts the first letter to
 rotororder[0] = np.roll(rotororder[0], alphabetpos.index(rotor1preset)+2)
 rotororder[1] = np.roll(rotororder[1], alphabetpos.index(rotor2preset)+2)
 rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset)+2)
@@ -43,7 +44,8 @@ rotororder[1] = list(rotororder[1])
 rotororder[2] = list(rotororder[2])
 # Each letter will be shifted 3 times then each rotor will rotate its given turns
 
-reflector = [["a","j"],["c","b"],["e","z"],["g","x"],["i","r"],["k","p"],["m","d"],["o","f"],["q","h"],["s","p"],["u","l"],["w","n"],["y","t"]]
+reflector = [["a", "l"], ["c", "n"], ["e", "d"], ["g", "x"], ["i", "r"], ["k", "p"], ["m", "v"], ["o", "f"], ["q", "h"],
+             ["s", "p"], ["u", "l"], ["w", "n"], ["y", "t"]]
 # Every letter is paired with another so after going through the rotors, they're substituted for their letter pair
 
 plaintext = input("Enter message:\n")  # This is what the user inputs
@@ -56,6 +58,7 @@ reflected = []  # This list will be the text after going through the reflector
 backwardthird = []  # This list will be the text after coming back through the third rotor
 backwardsecond = []  # This list will be the text after coming back through the second rotor
 backwardfirst = []  # This list will be the text after coming back through the first rotor
+finalplugboardtext = []  # This list will be the text after going through the plugboard again
 #  Above is more to better show every time each letter is shifted
 
 finalseparated = []  # This will be where the final text will be spliced into
@@ -67,10 +70,16 @@ for i in range(0, len(separated)):
 
 for i in range(0, len(plugboardtext)):
     firstrotor.append(rotororder[0][alphabetpos.index(plugboardtext[i])])
-    secondrotor.append(rotororder[1][rotororder[0].index(plugboardtext[i])])
-    thirdrotor.append(rotororder[2][rotororder[1].index(plugboardtext[i])])
+    secondrotor.append(rotororder[1][rotororder[0].index(firstrotor[i])])
+    thirdrotor.append(rotororder[2][rotororder[1].index(secondrotor[i])])
+# This iteratively checks the positioning of each letter in the previous alphabet set and places it in the same index
+# in the new index of the list. So the first rotor is set to G so if P passes through, it sees what position P is in
+# then shifts it to the same position in the rotor (initial G -> L -> B -> Z for example)
 
-    np.roll(rotororder[0], 1)
+    reflected.append(reflector[rotororder[2].index(thirdrotor)][1])
+    # Can't seem to figure out how to search the letter pair in the reflector and use that
+
+    rotororder[0] = np.roll(rotororder[0], 1)
     rotororder[0] = list(rotororder[0])
     if rotororder[0] == rotor1preset:
         np.roll(rotororder[1], 1)
@@ -78,11 +87,9 @@ for i in range(0, len(plugboardtext)):
         if rotororder[1] == rotor2preset:
             np.roll(rotororder[2], 1)
             rotororder[2] = list(rotororder[2])
-print(firstrotor)
-print(secondrotor)
-print(thirdrotor)
-print(rotororder[1])
+    # Every letter that's passed through will rotate the first rotor once.
+    # After a full revolution, it will rotate the second rotor and after thats full revolution, the third rotor will turn
+    # This makes 26^3 possible rotor combinations
 
 #finaltext = ''.join(i for i in finalseparated)
 #print(finaltext)
-
