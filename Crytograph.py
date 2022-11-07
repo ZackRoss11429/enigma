@@ -69,7 +69,7 @@ for i in range(0, len(separated)):
 # This iteratively appends each substituted letter of the user's input to the plugboardtext list
 
 for i in range(0, len(plugboardtext)):
-    firstrotor.append(rotororder[0][alphabetpos.index(plugboardtext[i])])
+    firstrotor.append(rotororder[0][alphabetpos.index(plugboardtext[i])]) # Seems that the rotor doesn't rotate every letter input
     secondrotor.append(rotororder[1][rotororder[0].index(firstrotor[i])])
     thirdrotor.append(rotororder[2][rotororder[1].index(secondrotor[i])])
     # This iteratively checks the positioning of each letter in the previous alphabet set and places it in the same index
