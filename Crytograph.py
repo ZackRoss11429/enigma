@@ -42,10 +42,11 @@ rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset) + 2)
 rotororder[0] = list(rotororder[0])
 rotororder[1] = list(rotororder[1])
 rotororder[2] = list(rotororder[2])
-# Each letter will be shifted 3 times then each rotor will rotate its given turns
+# Each letter will be shifted and substituted 3 times then each rotor will rotate in its given way
 
-reflector = [["a", "l"], ["c", "n"], ["e", "d"], ["g", "x"], ["i", "r"], ["k", "p"], ["m", "v"], ["o", "f"], ["q", "h"],
-             ["s", "p"], ["u", "l"], ["w", "n"], ["y", "t"]]
+reflector = [["a", "l"], ["c", "n"], ["e", "d"], ["g", "x"], ["i", "r"], ["k", "b"], ["m", "v"], ["o", "f"], ["q", "h"],
+             ["s", "p"], ["u", "l"], ["w", "n"], ["y", "t"], ["l", "a"], ["n", "c"], ["d", "e"], ["x", "g"], ["r", "i"],
+             ["k", "b"], ["m", "v"], ["o", "f"], ["q", "h"], ["p", "s"], ["l", "u"], ["n", "w"], ["t", "y"]]
 # Every letter is paired with another so after going through the rotors, they're substituted for their letter pair
 
 plaintext = input("Enter message:\n")  # This is what the user inputs
@@ -76,10 +77,8 @@ for i in range(0, len(plugboardtext)):
     # in the new index of the list. So the first rotor is set to G so if P passes through, it sees what position P is in
     # then shifts it to the same position in the rotor (initial G -> L -> B -> Z for example)
 
-    # reflected.append(reflector[rotororder[2].index(thirdrotor)][1])
+    reflected.append(reflector[rotororder[2].index(thirdrotor[i])][1])
     # Can't seem to figure out how to search the letter pair in the reflector and use that
-    print(rotororder[0])
-    print(thirdrotor)
 
     rotororder[0] = np.roll(rotororder[0], 1)
     rotororder[0] = list(rotororder[0])
@@ -92,6 +91,7 @@ for i in range(0, len(plugboardtext)):
     # Every letter that's passed through will rotate the first rotor once.
     # After a full revolution, it will rotate the second rotor and after thats full revolution, the third rotor will turn
     # This makes 26^3 possible rotor combinations
-
+print(thirdrotor)
+print(reflected)
 # finaltext = ''.join(i for i in finalseparated)
 # print(finaltext)
