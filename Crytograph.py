@@ -44,16 +44,30 @@ rotororder[1] = list(rotororder[1])
 rotororder[2] = list(rotororder[2])
 # Each letter will be shifted and substituted 3 times then each rotor will rotate in its given way
 
-reflector = [["a", "l"], ["c", "n"], ["e", "d"], ["g", "x"], ["i", "r"], ["k", "b"], ["m", "v"], ["o", "f"], ["q", "h"],
-             ["s", "p"], ["u", "l"], ["w", "n"], ["y", "t"], ["l", "a"], ["n", "c"], ["d", "e"], ["x", "g"], ["r", "i"],
-             ["k", "b"], ["m", "v"], ["o", "f"], ["q", "h"], ["p", "s"], ["l", "u"], ["n", "w"], ["t", "y"]]
+reflector = [["a", "e"], ["b", "j"], ["c", "m"], ["d", "z"], ["e", "a"], ["f", "l"], ["g", "y"], ["h", "x"], ["i", "v"],
+             ["j", "b"], ["k", "w"], ["l", "f"], ["m", "c"], ["n", "r"], ["o", "q"], ["p", "u"], ["q", "o"], ["r", "n"],
+             ["s", "t"], ["t", "s"], ["u", "p"], ["v", "i"], ["w", "k"], ["x", "h"], ["y", "g"], ["z", "d"]]
+# Reflector substitution cipher: EJMZALYXVBWFCRQUONTSPIKHGD
+
 # Every letter is paired with another so after going through the rotors, they're substituted for their letter pair
 
 plaintext = input("Enter message:\n")  # This is what the user inputs
 separated = list(plaintext)  # Splits up the text input into each character and places into a list
 plugboardtext = []  # This will be the text after the input letters are substituted in the configured way
+firstrotorsub = [["a", "e"], ["b", "k"], ["c", "m"], ["d", "f"], ["e", "l"], ["f", "g"], ["g", "d"], ["h", "q"], ["i", "v"],
+                 ["j", "z"], ["k", "n"], ["l", "t"], ["m", "o"], ["n", "w"], ["o", "y"], ["p", "h"], ["q", "x"], ["r", "u"],
+                 ["s", "s"], ["t", "p"], ["u", "a"], ["v", "i"], ["w", "b"], ["x", "r"], ["y", "c"], ["z", "j"]]
+# Rotor 1 substitution cipher: EKMFLGDQVZNTOWYHXUSPAIBRCJ. This holds the substitution cipher for the first rotor
 firstrotor = []  # This list will be the text after going through the first rotor
+secondrotorsub = [["a", "a"], ["b", "j"], ["c", "d"], ["d", "k"], ["e", "s"], ["f", "i"], ["g", "r"], ["h", "u"], ["i", "x"],
+                 ["j", "b"], ["k", "l"], ["l", "h"], ["m", "w"], ["n", "t"], ["o", "m"], ["p","c"], ["q", "q"], ["r", "g"],
+                 ["s", "z"], ["t", "n"], ["u", "p"], ["v", "y"], ["w", "f"], ["x", "v"], ["y", "o"], ["z", "e"]]
+# Rotor 2 substitution cipher: AJDKSIRUXBLHWTMCQGZNPYFVOE. This holds the substitution cipher for the second rotor
 secondrotor = []  # This list will be the text after going through the second rotor
+thirdrotorsub = [["a", "b"], ["b", "d"], ["c", "f"], ["d", "h"], ["e", "j"], ["f", "l"], ["g", "c"], ["h", "p"], ["i", "r"],
+                 ["j", "t"], ["k", "x"], ["l", "v"], ["m", "z"], ["n", "n"], ["o", "y"], ["p","e"], ["q", "i"], ["r", "w"],
+                 ["s", "g"], ["t", "a"], ["u", "k"], ["v", "m"], ["w", "u"], ["x", "s"], ["y", "q"], ["z", "o"]]
+# Rotor 3 substitution cipher: BDFHJLCPRTXVZNYEIWGAKMUSQO. This holds the substitution cipher for the third rotor
 thirdrotor = []  # This list will be the text after going through the third rotor
 reflected = []  # This list will be the text after going through the reflector
 backwardthird = []  # This list will be the text after coming back through the third rotor
@@ -70,10 +84,13 @@ for i in range(0, len(separated)):
 # This iteratively appends each substituted letter of the user's input to the plugboardtext list
 
 for i in range(0, len(plugboardtext)):
-    #https://en.wikipedia.org/wiki/Enigma_rotor_details#Rotor_wiring_tables
-    firstrotor.append(rotororder[0][alphabetpos.index(plugboardtext[i])]) # Seems that the rotor doesn't rotate every letter input
-    secondrotor.append(rotororder[1][rotororder[0].index(firstrotor[i])])
-    thirdrotor.append(rotororder[2][rotororder[1].index(secondrotor[i])])
+
+    firstrotor.append(firstrotorsub[alphabetpos.index(plugboardtext[i])][1])
+    firstrotor[i] = (rotororder[0][alphabetpos.index(plugboardtext[i])]) # Seems that the rotor doesn't rotate every letter input
+    secondrotor.append(secondrotorsub[rotororder[0].index(firstrotor[i])][1])
+    secondrotor[i] = (rotororder[1][rotororder[0].index(firstrotor[i])])
+    thirdrotor.append(thirdrotorsub[rotororder[1].index(secondrotor[i])][1])
+    thirdrotor = (rotororder[2][rotororder[1].index(secondrotor[i])])
     # This iteratively checks the positioning of each letter in the previous alphabet set and places it in the same index
     # in the new index of the list. So the first rotor is set to G so if P passes through, it sees what position P is in
     # then shifts it to the same position in the rotor (initial G -> L -> B -> Z for example)
