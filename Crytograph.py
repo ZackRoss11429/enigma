@@ -21,6 +21,8 @@ cog4 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o
         "w", "x", "y", "z"]
 cog5 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
         "w", "x", "y", "z"]
+# Code a different substitution system for all the cogs ^
+
 # every rotor has the alphabet on each side. Each is preset at a particular letter. Every letter is wired to another randomly
 # Every letter that's inputted will go through each rotor then into a reflector which pairs every letter.
 # The new letter will then go backwards through the rotors and shifted , then finally gone through the plugboard again.
