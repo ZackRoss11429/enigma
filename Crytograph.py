@@ -72,7 +72,8 @@ rotororder[0] = np.roll(rotororder[0], alphabetpos.index(rotor1preset) + 2)
 rotororder[1] = np.roll(rotororder[1], alphabetpos.index(rotor2preset) + 2)
 rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset) + 2)
 # the module above converts it to its own type of array, so it needs to be converted back to a regular list to be used
-# again
+# again. On an enigma machine, each rotor is turned
+# again. On an enigma machine, each rotor is turned
 rotororder[0] = list(rotororder[0])
 rotororder[1] = list(rotororder[1])
 rotororder[2] = list(rotororder[2])
@@ -109,14 +110,14 @@ for i in range(0, len(separated)):
 
 for i in range(0, len(plugboardtext)):
 
-    firstrotor.append(rotorsubs[rotorselection[rotoridentifier]][alphabetpos.index(plugboardtext[i])][1])
-    firstrotor[i] = (rotororder[0][alphabetpos.index(plugboardtext[i])])
+    firstrotor.append(rotorsubs[rotorselection[rotoridentifier[0]]][alphabetpos.index(plugboardtext[i])][1])
+    firstrotor[i] = (rotororder[0][alphabetpos.index(firstrotor[i])])
 
-    secondrotor.append(rotorsubs[rotorselection[rotoridentifier]][rotororder[0].index(firstrotor[i])][1])
-    secondrotor[i] = (rotororder[1][rotororder[0].index(firstrotor[i])])
+    secondrotor.append(rotorsubs[rotorselection[rotoridentifier[1]]][rotororder[0].index(firstrotor[i])][1])
+    secondrotor[i] = (rotororder[1][rotororder[0].index(secondrotor[i])])
 
-    thirdrotor.append(rotorsubs[rotorselection[rotoridentifier]][rotororder[1].index(secondrotor[i])][1])
-    thirdrotor[i] = (rotororder[2][rotororder[1].index(secondrotor[i])])
+    thirdrotor.append(rotorsubs[rotorselection[rotoridentifier[2]]][rotororder[1].index(secondrotor[i])][1])
+    thirdrotor[i] = (rotororder[2][rotororder[1].index(thirdrotor[i])])
 
     # This iteratively will place each letter going in as where it is in the alphabet (abcd...z) and then substitute it
     # for how each rotor's substitution cipher is ordered (rzgjsirt for example). It will then do the same with this new
@@ -125,6 +126,8 @@ for i in range(0, len(plugboardtext)):
 
     reflected.append(reflector[rotororder[2].index(thirdrotor[i])][1])
     # Can't seem to figure out how to search the letter pair in the reflector and use that
+
+    #backwardthird =
 
     rotororder[0] = np.roll(rotororder[0], 1)
     rotororder[0] = list(rotororder[0])
