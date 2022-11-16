@@ -21,7 +21,7 @@ cog4 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o
         "w", "x", "y", "z"]
 cog5 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
         "w", "x", "y", "z"]
-# every rotor has the alphabet on each side. Each is preset at a particular letter.
+# every rotor has the alphabet on each side. Each is preset at a particular letter. Every letter is wired to another randomly
 # Every letter that's inputted will go through each rotor then into a reflector which pairs every letter.
 # The new letter will then go backwards through the rotors and shifted , then finally gone through the plugboard again.
 # Every letter cycle, the rotor will rotate once. When a full revolution of the first is done, the second one rotates by one.
@@ -32,9 +32,9 @@ alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
 # this list helps compare the positioning of the before and after of going through the rotors
 
 rotororder = [cog5, cog3, cog2]  # This places the rotors into the 3 slots
-rotor1preset = "z"  # This is what letter the first rotor shifts the first letter to
-rotor2preset = "k"  # This is what letter the second rotor shifts the first letter to
-rotor3preset = "g"  # This is what letter the third rotor shifts the first letter to
+rotor1preset = "h"  # This is what letter the first rotor shifts the first letter to
+rotor2preset = "s"  # This is what letter the second rotor shifts the first letter to
+rotor3preset = "k"  # This is what letter the third rotor shifts the first letter to
 rotororder[0] = np.roll(rotororder[0], alphabetpos.index(rotor1preset) + 2)
 rotororder[1] = np.roll(rotororder[1], alphabetpos.index(rotor2preset) + 2)
 rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset) + 2)
@@ -70,6 +70,7 @@ for i in range(0, len(separated)):
 # This iteratively appends each substituted letter of the user's input to the plugboardtext list
 
 for i in range(0, len(plugboardtext)):
+    #https://en.wikipedia.org/wiki/Enigma_rotor_details#Rotor_wiring_tables
     firstrotor.append(rotororder[0][alphabetpos.index(plugboardtext[i])]) # Seems that the rotor doesn't rotate every letter input
     secondrotor.append(rotororder[1][rotororder[0].index(firstrotor[i])])
     thirdrotor.append(rotororder[2][rotororder[1].index(secondrotor[i])])
