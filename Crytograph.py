@@ -188,6 +188,7 @@ for i in range(0, len(plugboardtext)):
     rotorciphers[rotorselection[rotoridentifier[0]]] = (rotorciphers[rotorselection[rotoridentifier[0]]])[-1] + \
                                                        (rotorciphers[rotorselection[rotoridentifier[0]]])[:-1]
     firstrotorcipher = rotorciphers[rotorselection[rotoridentifier[0]]]
+
     # This will determine the correct cipher for the selected first rotor (out of the 5) and every letter, the cipher
     # will rotate by one and thus every new letter gets a shifted substitution cipher plus one more shift than the
     # previous.
@@ -214,7 +215,7 @@ for i in range(0, len(plugboardtext)):
             # the cipher will rotate by one and thus every new letter gets a shifted substitution cipher plus one more
             # shift than the previous. This only happens when the second rotor is rotated, which only happens when its
             # previous rotor does a full revolution
-    print(firstrotorcipher,secondrotorcipher,thirdrotorcipher)
+
     # Every letter that's passed through will rotate the first rotor once. After a full revolution, it will rotate
     # the second rotor and after that full revolution, the third rotor will turn This makes 26^3 possible rotor
     # combinations
