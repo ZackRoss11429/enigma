@@ -1,10 +1,5 @@
 import numpy as np
 
-# plugboard configuration where letters are assigned to other letters (a-l, h-s, z-o etc) -- 10 substitutions
-# then of 5 rotors 3 will be placed into one of the 3 rotor slots
-# and each of those rotors to display a particular letter of its alphabet
-# number of configurations: 26! / (6! * 10! * 2^10) = ~ 159,000,000,000,000,000,000
-
 plugboard = [["a", "f"], ["b", "b"], ["c", "z"], ["d", "d"], ["e", "e"], ["f", "a"], ["g", "m"], ["h", "i"], ["i", "h"],
              ["j,t"], ["k", "n"], ["l", "y"], ["m", "g"], ["n", "k"], ["o", "s"], ["p", "p"], ["q", "v"], ["r", "r"],
              ["s", "o"], ["t", "j"], ["u", "u"], ["v", "q"], ["w", "w"], ["x", "x"], ["y", "l"], ["z", "c"]]
@@ -25,6 +20,7 @@ cog4 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o
 
 cog5 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
         "w", "x", "y", "z"]
+# These are the rotors that have not been shifted in any way.
 
 rotorselection = {"cog1": 0, "cog2": 1, "cog3": 2, "cog4": 3, "cog5": 4}
 # This dictionary allows for the correct substitution cipher to be used for the right rotor
@@ -57,13 +53,36 @@ rotorsubs = [
 # again. Every letter cycle, the rotor will rotate once. When a full revolution of the first is done, the second one
 # rotates by one. When the second rotor fully rotates, the third will rotate once.
 
+
+rotor1cipher = "NKMFLGDQVZNTOWYHXUSPAIBRCJ"
+rotor2cipher = "AJDKSIRUXBLHWTMCQGZNPYFVOE"
+rotor3cipher = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
+rotor4cipher = "ESOVPZJAYQUIRHXLNFTGKDCMWB"
+rotor5cipher = "VZBRGITYUPSDNHLXAWMJQOFECK"
+rotorciphers = [rotor1cipher, rotor2cipher, rotor3cipher, rotor4cipher, rotor5cipher]
+
+
+for i in range(1, 26):
+    rotorsubs[0][i - 1][1] = list(rotor1cipher.lower())[i]
+    rotorsubs[1][i - 1][1] = list(rotor2cipher.lower())[i]
+    rotorsubs[2][i - 1][1] = list(rotor3cipher.lower())[i]
+    rotorsubs[3][i - 1][1] = list(rotor4cipher.lower())[i]
+    rotorsubs[4][i - 1][1] = list(rotor5cipher.lower())[i]
+
+# the rotorsubs list shows the default substitution cipher used for each rotor. Each cipher can be edited by changing
+# the strings above
+
 alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
                "u", "v", "w", "x", "y", "z"]
 # this list helps compare the positioning of the before and after of going through the rotors
 
 rotororder = [cog5, cog3, cog2]  # This places the rotors into the 3 slots
-rotoridentifier = ["cog5", "cog3", "cog2"] # This is to cross-check with the rotorselection dictionary to ensure the
+rotoridentifier = ["cog5", "cog3", "cog2"]  # This is to cross-check with the rotorselection dictionary to ensure the
 # correct substitution cipher is used with the right rotor
+
+firstrotorcipher = rotorciphers[rotorselection[rotoridentifier[0]]]
+secondrotorcipher = rotorciphers[rotorselection[rotoridentifier[1]]]
+thirdrotorcipher = rotorciphers[rotorselection[rotoridentifier[2]]]
 
 rotor1preset = "h"  # This is what letter the first rotor shifts the first letter to
 rotor2preset = "s"  # This is what letter the second rotor shifts the first letter to
@@ -73,7 +92,6 @@ rotororder[1] = np.roll(rotororder[1], alphabetpos.index(rotor2preset) + 2)
 rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset) + 2)
 # the module above converts it to its own type of array, so it needs to be converted back to a regular list to be used
 # again. On an enigma machine, each rotor is turned
-# again. On an enigma machine, each rotor is turned
 rotororder[0] = list(rotororder[0])
 rotororder[1] = list(rotororder[1])
 rotororder[2] = list(rotororder[2])
@@ -82,12 +100,18 @@ rotororder[2] = list(rotororder[2])
 reflector = [["a", "e"], ["b", "j"], ["c", "m"], ["d", "z"], ["e", "a"], ["f", "l"], ["g", "y"], ["h", "x"], ["i", "v"],
              ["j", "b"], ["k", "w"], ["l", "f"], ["m", "c"], ["n", "r"], ["o", "q"], ["p", "u"], ["q", "o"], ["r", "n"],
              ["s", "t"], ["t", "s"], ["u", "p"], ["v", "i"], ["w", "k"], ["x", "h"], ["y", "g"], ["z", "d"]]
-# Reflector substitution cipher: EJMZALYXVBWFCRQUONTSPIKHGD
+# Default reflector substitution cipher: EJMZALYXVBWFCRQUONTSPIKHGD
 
-# Every letter is paired with another so after going through the rotors, they're substituted for their letter pair
+reflectorcipher = "EJMZALYXVBWFCRQUONTSPIKHGD"  # This can be edited to change the reflector's substitution cipher
+for i in range(1, 26):
+    reflector[i][1] = list(reflectorcipher.lower())[i]
+
+# The letter that is outputs from the rotors will then be substituted following a cipher used by the reflector
 
 plaintext = input("Enter message:\n")  # This is what the user inputs
-separated = list(plaintext)  # Splits up the text input into each character and places into a list
+separated = (list(plaintext))  # Splits up the text input into each character and places into a list
+separated = [i.lower() for i in separated]  # makes any uppercase characters lowercase
+
 plugboardtext = []  # This will be the text after the input letters are substituted in the configured way
 
 firstrotor = []  # This list will be the text after going through the first rotor
@@ -98,10 +122,9 @@ reflected = []  # This list will be the text after going through the reflector
 backwardthird = []  # This list will be the text after coming back through the third rotor
 backwardsecond = []  # This list will be the text after coming back through the second rotor
 backwardfirst = []  # This list will be the text after coming back through the first rotor
-finalplugboardtext = []  # This list will be the text after going through the plugboard again
+finaltext = []  # This list will be the text after going through the plugboard again. This is the final list
 #  Above is more to better show every time each letter is shifted
 
-finalseparated = []  # This will be where the final text will be spliced into
 
 for i in range(0, len(separated)):
     if separated[i] in alphabetpos:  # this will ignore non-alphabet characters such as spaces/punctuation/numbers
@@ -125,24 +148,68 @@ for i in range(0, len(plugboardtext)):
     # do the same for every rotor. So for example: a->k->l -> l->s->q -> q->z->j
 
     reflected.append(reflector[rotororder[2].index(thirdrotor[i])][1])
-    # Can't seem to figure out how to search the letter pair in the reflector and use that
+    # The letters going into the reflector are substituted using a cipher
 
-    #backwardthird =
+    backwardthird.append(rotororder[2][alphabetpos.index(reflected[i])])
+    backwardthird[i] = (rotorsubs[rotorselection[rotoridentifier[2]]][rotororder[2].index(alphabetpos[i])][1])
 
-    rotororder[0] = np.roll(rotororder[0], 1)
+    backwardsecond.append(rotororder[1][rotororder[2].index(backwardthird[i])])
+    backwardsecond[i] = (rotorsubs[rotorselection[rotoridentifier[1]]][rotororder[1].index(backwardthird[i])][1])
+
+    backwardfirst.append(rotororder[0][rotororder[1].index(backwardsecond[i])])
+    backwardfirst[i] = (rotorsubs[rotorselection[rotoridentifier[0]]][rotororder[0].index(backwardsecond[i])][1])
+
+    # Above shows each letter going backwards through the rotors being shifted and substituted again
+
+    finaltext.append(plugboard[alphabetpos.index(backwardfirst[i])][1])
+    # Finally, the letters are fed through the plugboard one last time
+
+    rotororder[0] = np.roll(rotororder[0], 1)  # This shows the first rotor being rotated after every letter
     rotororder[0] = list(rotororder[0])
+    reflector = np.roll(reflector, 1, axis=1)  # This shifts the reflector's substitution cipher by one every letter
+    reflector = list(reflector)
+
+    rotorciphers[rotorselection[rotoridentifier[0]]] = (rotorciphers[rotorselection[rotoridentifier[0]]])[-1] + \
+                                                       (rotorciphers[rotorselection[rotoridentifier[0]]])[:-1]
+    firstrotorcipher = rotorciphers[rotorselection[rotoridentifier[0]]]
+
     if rotororder[0] == rotor1preset:
         rotororder[1] = np.roll(rotororder[1], 1)
         rotororder[1] = list(rotororder[1])
+
+        rotorciphers[rotorselection[rotoridentifier[1]]] = (rotorciphers[rotorselection[rotoridentifier[1]]])[-1] + \
+                                                           (rotorciphers[rotorselection[rotoridentifier[1]]])[:-1]
+        secondrotorcipher = rotorciphers[rotorselection[rotoridentifier[1]]]
+
         if rotororder[1] == rotor2preset:
             rotororder[2] = np.roll(rotororder[2], 1)
             rotororder[2] = list(rotororder[2])
-    # Every letter that's passed through will rotate the first rotor once.
-    # After a full revolution, it will rotate the second rotor and after thats full revolution, the third rotor will turn
-    # This makes 26^3 possible rotor combinations
-print(firstrotor)
-print(secondrotor)
-print(thirdrotor)
-print(reflected)
-# finaltext = ''.join(i for i in finalseparated)
-# print(finaltext)
+
+            rotorciphers[rotorselection[rotoridentifier[2]]] = (rotorciphers[rotorselection[rotoridentifier[2]]])[-1] + \
+                                                               (rotorciphers[rotorselection[rotoridentifier[2]]])[:-1]
+            thirdrotorcipher = rotorciphers[rotorselection[rotoridentifier[2]]]
+    print(firstrotorcipher, secondrotorcipher, thirdrotorcipher)
+    # Every letter that's passed through will rotate the first rotor once. After a full revolution, it will rotate
+    # the second rotor and after that full revolution, the third rotor will turn This makes 26^3 possible rotor
+    # combinations
+print("Original Text: ", ''.join(i for i in separated))
+print("Text after Plugboard: ", ''.join(i for i in plugboardtext))
+print("Text after First Rotor: ", ''.join(i for i in firstrotor))
+print("Text after Second Rotor: ", ''.join(i for i in secondrotor))
+print("Text after Third Rotor: ", ''.join(i for i in thirdrotor))
+print("Text after Reflector: ", ''.join(i for i in reflected))
+print("Text after going backwards through Third Rotor: ", ''.join(i for i in backwardthird))
+print("Text after going backwards through Second Rotor: ", ''.join(i for i in backwardsecond))
+print("Text after going backwards through First Rotor: ", ''.join(i for i in backwardfirst))
+print("Text after Plugboard: ", ''.join(i for i in finaltext))
+
+# Drawbacks Each rotor's substitution ciphers will shift by one letter every time the rotor rotates. From how all the
+# substitution ciphers and how each of the rotors have been stored, this isn't a possible feature. As well,
+# the next rotor will rotate by one when the previous makes a full revolution. This is done by a rod pushing the
+# first rotor to make it rotate. The rods for the second and third can't be rotated by its rod as it's blocked by the
+# edge of the first rotor but at a point on that edge, there's a gap that allows the second rotor to be pushed (same
+# process happens with the third rotor). This means that at a certain rotation of each rotor will push the next rotor
+# So it's never going to be exactly a full revolution for each one.
+# One difference is the reflector which will shift all of its connections by one letter. This is instead of it always
+# substituting the same
+# Another difference is another setting that can be changed is what substitution cipher each of the rotors/reflector use
