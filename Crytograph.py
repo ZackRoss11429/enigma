@@ -1,7 +1,7 @@
 import numpy as np
 
 plugboard = [["a", "f"], ["b", "b"], ["c", "z"], ["d", "d"], ["e", "e"], ["f", "a"], ["g", "m"], ["h", "i"], ["i", "h"],
-             ["j,t"], ["k", "n"], ["l", "y"], ["m", "g"], ["n", "k"], ["o", "s"], ["p", "p"], ["q", "v"], ["r", "r"],
+             ["j", "t"], ["k", "n"], ["l", "y"], ["m", "g"], ["n", "k"], ["o", "s"], ["p", "p"], ["q", "v"], ["r", "r"],
              ["s", "o"], ["t", "j"], ["u", "u"], ["v", "q"], ["w", "w"], ["x", "x"], ["y", "l"], ["z", "c"]]
 # plugboard which is configured to substitute up to 10 letters with other letters
 # maximum 10 substitutions (switch both related letter indexes)
@@ -61,6 +61,7 @@ rotor4cipher = "ESOVPZJAYQUIRHXLNFTGKDCMWB"
 rotor5cipher = "VZBRGITYUPSDNHLXAWMJQOFECK"
 rotorciphers = [rotor1cipher, rotor2cipher, rotor3cipher, rotor4cipher, rotor5cipher]
 
+# The above shows each of the rotors' ciphers. They are placed here and can be modified if desired
 
 for i in range(1, 26):
     rotorsubs[0][i - 1][1] = list(rotor1cipher.lower())[i]
@@ -76,13 +77,28 @@ alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
                "u", "v", "w", "x", "y", "z"]
 # this list helps compare the positioning of the before and after of going through the rotors
 
-rotororder = [cog5, cog3, cog2]  # This places the rotors into the 3 slots
-rotoridentifier = ["cog5", "cog3", "cog2"]  # This is to cross-check with the rotorselection dictionary to ensure the
+rotororder = [cog2, cog5, cog4]  # This places the rotors into the 3 slots
+rotoridentifier = ["cog2", "cog5", "cog4"]  # This is to cross-check with the rotorselection dictionary to ensure the
 # correct substitution cipher is used with the right rotor
 
 firstrotorcipher = rotorciphers[rotorselection[rotoridentifier[0]]]
+rotorciphers[rotorselection[rotoridentifier[0]]] = (rotorciphers[rotorselection[rotoridentifier[0]]])[:-1] + \
+                                                       (rotorciphers[rotorselection[rotoridentifier[0]]])[-1]
+
 secondrotorcipher = rotorciphers[rotorselection[rotoridentifier[1]]]
+rotorciphers[rotorselection[rotoridentifier[1]]] = (rotorciphers[rotorselection[rotoridentifier[1]]])[:-1] + \
+                                                           (rotorciphers[rotorselection[rotoridentifier[1]]])[-1]
+
 thirdrotorcipher = rotorciphers[rotorselection[rotoridentifier[2]]]
+rotorciphers[rotorselection[rotoridentifier[2]]] = (rotorciphers[rotorselection[rotoridentifier[2]]])[:-1] + \
+                                                               (rotorciphers[rotorselection[rotoridentifier[2]]])[-1]
+# The above variables creates a reference for what each rotor has been chosen so the correct cipher can be used for it
+# This is because there can be any rotor in any of the 3 positions so the code will need to know what's in each slot
+# As well, this is current rolling the cipher backwards by one as later in the encoding process, it will try to detect
+# When a rotor has done a full revolution by checking if the current letter the rotor is set to is the same as its start
+# This will then detect a full revolution when the rotors haven't rotated as they'll be the same as the rotor preset
+# Which will cause the cipher to automatically rotate
+
 
 rotor1preset = "h"  # This is what letter the first rotor shifts the first letter to
 rotor2preset = "s"  # This is what letter the second rotor shifts the first letter to
@@ -151,17 +167,17 @@ for i in range(0, len(plugboardtext)):
     # The letters going into the reflector are substituted using a cipher
 
     backwardthird.append(rotororder[2][alphabetpos.index(reflected[i])])
-    backwardthird[i] = (rotorsubs[rotorselection[rotoridentifier[2]]][rotororder[2].index(alphabetpos[i])][1])
+    backwardthird[i] = (rotorsubs[rotorselection[rotoridentifier[2]]][rotororder[2].index(backwardthird[i])][1])
 
     backwardsecond.append(rotororder[1][rotororder[2].index(backwardthird[i])])
-    backwardsecond[i] = (rotorsubs[rotorselection[rotoridentifier[1]]][rotororder[1].index(backwardthird[i])][1])
+    backwardsecond[i] = (rotorsubs[rotorselection[rotoridentifier[1]]][rotororder[1].index(backwardsecond[i])][1])
 
     backwardfirst.append(rotororder[0][rotororder[1].index(backwardsecond[i])])
-    backwardfirst[i] = (rotorsubs[rotorselection[rotoridentifier[0]]][rotororder[0].index(backwardsecond[i])][1])
+    backwardfirst[i] = (rotorsubs[rotorselection[rotoridentifier[0]]][rotororder[0].index(backwardfirst[i])][1])
 
     # Above shows each letter going backwards through the rotors being shifted and substituted again
 
-    finaltext.append(plugboard[alphabetpos.index(backwardfirst[i])][1])
+    finaltext.append(plugboard[rotororder[0].index(backwardfirst[i])][1])
     # Finally, the letters are fed through the plugboard one last time
 
     rotororder[0] = np.roll(rotororder[0], 1)  # This shows the first rotor being rotated after every letter
@@ -172,26 +188,37 @@ for i in range(0, len(plugboardtext)):
     rotorciphers[rotorselection[rotoridentifier[0]]] = (rotorciphers[rotorselection[rotoridentifier[0]]])[-1] + \
                                                        (rotorciphers[rotorselection[rotoridentifier[0]]])[:-1]
     firstrotorcipher = rotorciphers[rotorselection[rotoridentifier[0]]]
-
-    if rotororder[0] == rotor1preset:
+    # This will determine the correct cipher for the selected first rotor (out of the 5) and every letter, the cipher
+    # will rotate by one and thus every new letter gets a shifted substitution cipher plus one more shift than the
+    # previous.
+    if rotororder[0][0] == rotor1preset:
         rotororder[1] = np.roll(rotororder[1], 1)
         rotororder[1] = list(rotororder[1])
-
         rotorciphers[rotorselection[rotoridentifier[1]]] = (rotorciphers[rotorselection[rotoridentifier[1]]])[-1] + \
                                                            (rotorciphers[rotorselection[rotoridentifier[1]]])[:-1]
         secondrotorcipher = rotorciphers[rotorselection[rotoridentifier[1]]]
 
-        if rotororder[1] == rotor2preset:
+        # This will determine the correct cipher for the selected second rotor and every letter,
+        # the cipher will rotate by one and thus every new letter gets a shifted substitution cipher plus one more
+        # shift than the previous. This only happens when the second rotor is rotated, which only happens when its
+        # previous rotor does a full revolution
+
+        if rotororder[1][0] == rotor2preset:
             rotororder[2] = np.roll(rotororder[2], 1)
             rotororder[2] = list(rotororder[2])
 
             rotorciphers[rotorselection[rotoridentifier[2]]] = (rotorciphers[rotorselection[rotoridentifier[2]]])[-1] + \
                                                                (rotorciphers[rotorselection[rotoridentifier[2]]])[:-1]
             thirdrotorcipher = rotorciphers[rotorselection[rotoridentifier[2]]]
-    print(firstrotorcipher, secondrotorcipher, thirdrotorcipher)
+            # This will determine the correct cipher for the selected third rotor and every letter,
+            # the cipher will rotate by one and thus every new letter gets a shifted substitution cipher plus one more
+            # shift than the previous. This only happens when the second rotor is rotated, which only happens when its
+            # previous rotor does a full revolution
+    print(firstrotorcipher,secondrotorcipher,thirdrotorcipher)
     # Every letter that's passed through will rotate the first rotor once. After a full revolution, it will rotate
     # the second rotor and after that full revolution, the third rotor will turn This makes 26^3 possible rotor
     # combinations
+
 print("Original Text: ", ''.join(i for i in separated))
 print("Text after Plugboard: ", ''.join(i for i in plugboardtext))
 print("Text after First Rotor: ", ''.join(i for i in firstrotor))
@@ -203,9 +230,8 @@ print("Text after going backwards through Second Rotor: ", ''.join(i for i in ba
 print("Text after going backwards through First Rotor: ", ''.join(i for i in backwardfirst))
 print("Text after Plugboard: ", ''.join(i for i in finaltext))
 
-# Drawbacks Each rotor's substitution ciphers will shift by one letter every time the rotor rotates. From how all the
-# substitution ciphers and how each of the rotors have been stored, this isn't a possible feature. As well,
-# the next rotor will rotate by one when the previous makes a full revolution. This is done by a rod pushing the
+# Drawbacks
+# The next rotor will rotate by one when the previous makes a full revolution. This is done by a rod pushing the
 # first rotor to make it rotate. The rods for the second and third can't be rotated by its rod as it's blocked by the
 # edge of the first rotor but at a point on that edge, there's a gap that allows the second rotor to be pushed (same
 # process happens with the third rotor). This means that at a certain rotation of each rotor will push the next rotor
