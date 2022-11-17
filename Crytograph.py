@@ -3,8 +3,14 @@ import numpy as np
 plugboard = [["a", "f"], ["b", "b"], ["c", "z"], ["d", "d"], ["e", "e"], ["f", "a"], ["g", "m"], ["h", "i"], ["i", "h"],
              ["j", "t"], ["k", "n"], ["l", "y"], ["m", "g"], ["n", "k"], ["o", "s"], ["p", "p"], ["q", "v"], ["r", "r"],
              ["s", "o"], ["t", "j"], ["u", "u"], ["v", "q"], ["w", "w"], ["x", "x"], ["y", "l"], ["z", "c"]]
+
+plugboardcipher = "fbzdeamihtnygkspvrojuqwxlc"
+for i in range(1, 26):
+    plugboard[i][1] = plugboardcipher[i]
+
 # plugboard which is configured to substitute up to 10 letters with other letters
 # maximum 10 substitutions (switch both related letter indexes)
+# plugobardcipher allows for easier configuring of the plugboard
 
 cog1 = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
         "w", "x", "y", "z"]
