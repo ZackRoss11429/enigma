@@ -189,6 +189,9 @@ for i in range(0, len(plugboardtext)):
                                                        (rotorciphers[rotorselection[rotoridentifier[0]]])[:-1]
     firstrotorcipher = rotorciphers[rotorselection[rotoridentifier[0]]]
 
+    for j in range(1, 26):
+        rotorsubs[rotorselection[rotoridentifier[0]]][j-1][1] = firstrotorcipher[j-1].lower()
+
     # This will determine the correct cipher for the selected first rotor (out of the 5) and every letter, the cipher
     # will rotate by one and thus every new letter gets a shifted substitution cipher plus one more shift than the
     # previous.
@@ -198,6 +201,9 @@ for i in range(0, len(plugboardtext)):
         rotorciphers[rotorselection[rotoridentifier[1]]] = (rotorciphers[rotorselection[rotoridentifier[1]]])[-1] + \
                                                            (rotorciphers[rotorselection[rotoridentifier[1]]])[:-1]
         secondrotorcipher = rotorciphers[rotorselection[rotoridentifier[1]]]
+
+        for j in range(1, 26):
+            rotorsubs[rotorselection[rotoridentifier[1]]][j - 1][1] = secondrotorcipher[j - 1].lower()
 
         # This will determine the correct cipher for the selected second rotor and every letter,
         # the cipher will rotate by one and thus every new letter gets a shifted substitution cipher plus one more
@@ -211,6 +217,10 @@ for i in range(0, len(plugboardtext)):
             rotorciphers[rotorselection[rotoridentifier[2]]] = (rotorciphers[rotorselection[rotoridentifier[2]]])[-1] + \
                                                                (rotorciphers[rotorselection[rotoridentifier[2]]])[:-1]
             thirdrotorcipher = rotorciphers[rotorselection[rotoridentifier[2]]]
+
+            for j in range(1, 26):
+                rotorsubs[rotorselection[rotoridentifier[2]]][j - 1][1] = thirdrotorcipher[j - 1].lower()
+
             # This will determine the correct cipher for the selected third rotor and every letter,
             # the cipher will rotate by one and thus every new letter gets a shifted substitution cipher plus one more
             # shift than the previous. This only happens when the second rotor is rotated, which only happens when its
