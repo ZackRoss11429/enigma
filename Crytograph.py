@@ -5,9 +5,9 @@ plugboard = [["a", "f"], ["b", "b"], ["c", "z"], ["d", "d"], ["e", "e"], ["f", "
              ["s", "o"], ["t", "j"], ["u", "u"], ["v", "q"], ["w", "w"], ["x", "x"], ["y", "l"], ["z", "c"]]
 
 plugboardcipher = "fbzdeamihtnygkspvrojuqwxlc"
-for i in range(1, 26):
-    plugboard[i][1] = plugboardcipher[i]
 
+for i in range(1, 26):
+    plugboard[i-1][1] = plugboardcipher[i-1]
 # plugboard which is configured to substitute up to 10 letters with other letters
 # maximum 10 substitutions (switch both related letter indexes)
 # plugobardcipher allows for easier configuring of the plugboard
@@ -83,8 +83,8 @@ alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
                "u", "v", "w", "x", "y", "z"]
 # this list helps compare the positioning of the before and after of going through the rotors
 
-rotororder = [cog2, cog5, cog4]  # This places the rotors into the 3 slots
-rotoridentifier = ["cog2", "cog5", "cog4"]  # This is to cross-check with the rotorselection dictionary to ensure the
+rotororder = [cog3, cog1, cog5]  # This places the rotors into the 3 slots
+rotoridentifier = ["cog3", "cog1", "cog5"]  # This is to cross-check with the rotorselection dictionary to ensure the
 # correct substitution cipher is used with the right rotor
 
 firstrotorcipher = rotorciphers[rotorselection[rotoridentifier[0]]]
@@ -106,9 +106,9 @@ rotorciphers[rotorselection[rotoridentifier[2]]] = (rotorciphers[rotorselection[
 # Which will cause the cipher to automatically rotate
 
 
-rotor1preset = "h"  # This is what letter the first rotor shifts the first letter to
-rotor2preset = "s"  # This is what letter the second rotor shifts the first letter to
-rotor3preset = "k"  # This is what letter the third rotor shifts the first letter to
+rotor1preset = "k"  # This is what letter the first rotor shifts the first letter to
+rotor2preset = "q"  # This is what letter the second rotor shifts the first letter to
+rotor3preset = "o"  # This is what letter the third rotor shifts the first letter to
 rotororder[0] = np.roll(rotororder[0], alphabetpos.index(rotor1preset) + 2)
 rotororder[1] = np.roll(rotororder[1], alphabetpos.index(rotor2preset) + 2)
 rotororder[2] = np.roll(rotororder[2], alphabetpos.index(rotor3preset) + 2)
