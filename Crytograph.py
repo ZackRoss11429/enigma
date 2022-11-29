@@ -9,21 +9,52 @@
 # it will go through the plugboard once more before appearing as the final letter in the lamp board
 
 class Plugboard:
-    def __init__(self, pairs, indexes, input):
-        self.pairs = {"a": "f", "b": "b", "c": "z", "d": "d", "e": "e", "f": "a", "g": "m", "h": "i", "i": "h",
-                      "j": "t", "k": "n", "l": "y", "m": "g", "n": "k", "o": "s", "p": "p", "q": "v", "r": "r",
-                      "s": "o", "t": "j", "u": "u", "v": "q", "w": "w", "x": "x", "y": "l", "z": "c"}
+    def __init__(self, plaintext):
+        self.plaintext = plaintext
 
-        self.index = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9, "j": 10, "k": 11,
-                      "l": 12, "m": 13, "n": 14, "o": 15, "p": 16, "q": 17, "r": 18, "s": 19, "t": 20, "u": 21,
-                      "v": 22, "w": 23, "x": 24, "y": 25, "z": 26}
+        pairs = {"a": "a", "b": "b", "c": "c", "d": "d", "e": "e", "f": "f", "g": "g", "h": "h", "i": "i",
+                 "j": "j", "k": "k", "l": "l", "m": "m", "n": "n", "o": "o", "p": "p", "q": "q", "r": "r",
+                 "s": "s", "t": "t", "u": "u", "v": "v", "w": "w", "x": "x", "y": "y", "z": "z"}
 
-        self.index = ""
+        print(plaintext)
+        index = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9, "j": 10, "k": 11,
+                 "l": 12, "m": 13, "n": 14, "o": 15, "p": 16, "q": 17, "r": 18, "s": 19, "t": 20, "u": 21,
+                 "v": 22, "w": 23, "x": 24, "y": 25, "z": 26}
 
-    def __str__(self):
-        return "Word after plugboard:" f"{self.}"
+        plugboardconfig = "dcbawfqupyktzxoigrslhvenjm"
 
-    plugboardtext = Plugboard("b")
+        plaintext = ""
+
+        plugboardtext = ""
+
+    def plugboard(self, pairs):
+        for i in range(1, 26):
+            print(self.pairs(i))
+
+    def __str__(self, plugboardtext):
+        return "Word after plugboard:" f"{''.join(plugboardtext)}"
 
 
+class Rotors:
+    def __init__(self, ciphers, rotororder, ringsetting, rotors, rotorpreset, rotateletter):
+        self.ciphers = {"I-K": "PEZUOHXSCVFMTBGLRINQJWAYDK", "II-K": "ZOUESYDKFWPCIQXHMVBLGNJRAT",
+                        "III-K": "EHRVXGAOBQUSIMZFLYNWKTPDJC", "UKW-K": "IMETCGFRAYSQBZXWLHKDVUPOJN",
+                        "ETW-K": "QWERTZUIOASDFGHJKPYXCVBNML"}
 
+        self.rotors = ((1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
+                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
+                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
+                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
+                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26))
+
+        self.rotororder = ["III-K", "I-K", "ETW-K"]
+
+        self.ringsetting = 4
+
+        self.rotorpreset = [4, 6, 23]
+
+        self.rotateletter = 12
+
+
+# class Reflector:
+p = Plugboard("hello")
