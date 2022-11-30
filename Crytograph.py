@@ -10,36 +10,47 @@
 
 class Plugboard:
     def __init__(self, plaintext):
-        self.plaintext = plaintext
 
         pairs = {"a": "a", "b": "b", "c": "c", "d": "d", "e": "e", "f": "f", "g": "g", "h": "h", "i": "i",
                  "j": "j", "k": "k", "l": "l", "m": "m", "n": "n", "o": "o", "p": "p", "q": "q", "r": "r",
                  "s": "s", "t": "t", "u": "u", "v": "v", "w": "w", "x": "x", "y": "y", "z": "z"}
         pairitems = list(pairs.keys())
 
-        print(plaintext)
         indexes = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9, "j": 10, "k": 11,
-                 "l": 12, "m": 13, "n": 14, "o": 15, "p": 16, "q": 17, "r": 18, "s": 19, "t": 20, "u": 21,
-                 "v": 22, "w": 23, "x": 24, "y": 25, "z": 26}
+                   "l": 12, "m": 13, "n": 14, "o": 15, "p": 16, "q": 17, "r": 18, "s": 19, "t": 20, "u": 21,
+                   "v": 22, "w": 23, "x": 24, "y": 25, "z": 26}
 
         plugboardconfig = "dcbawfqupyktzxoigrslhvenjm"
-        for i in range(1, 26):
-            pairs[pairitems[i-1]] = plugboardconfig[i-1]
 
-    def plugboard(self, pairs, plugboardtext):
-        for i in range(0, len(plaintext)):
-            plugboardtext[i] = pairs[plaintext[i]]
-            print(plugboardtext)
-        return(plugboardtext)
+        plugboardtext = [None] * len(plaintext)
 
+        self.plaintext = plaintext
+        self.pairs = pairs
+        self.indexes = indexes
+        self.plugboardtext = plugboardtext
+        self.pairitems = pairitems
 
+        for i in range(0, 26):
+            pairs[pairitems[i]] = plugboardconfig[i]
 
-    def __str__(self, plugboardtext):
-        return "Word after plugboard:" f"{''.join(plugboardtext)}"
+    def plugboard(self):
+        for i in range(0, len(self.plaintext)):
+            self.plugboardtext[i] = self.pairs.get(plaintext[i])
+        return self.plugboardtext
+        print("Word after plugboard: " + ''.join(plugboardtext))
+        pass
+
 
 
 class Rotors:
-    def __init__(self, ciphers, rotororder, ringsetting, rotors, rotorpreset, rotateletter):
+    def __init__(self, plugboardtext):
+        self.ciphers = ciphers
+        self.rotororder = rotororder
+        self.ringsetting = ringsetting
+        self.rotors = rotors
+        self.rotorpreset = rotorpreset
+        self.rotateletter = rotateletter
+
         self.ciphers = {"I-K": "PEZUOHXSCVFMTBGLRINQJWAYDK", "II-K": "ZOUESYDKFWPCIQXHMVBLGNJRAT",
                         "III-K": "EHRVXGAOBQUSIMZFLYNWKTPDJC", "UKW-K": "IMETCGFRAYSQBZXWLHKDVUPOJN",
                         "ETW-K": "QWERTZUIOASDFGHJKPYXCVBNML"}
@@ -62,3 +73,4 @@ class Rotors:
 # class Reflector:
 plaintext = input("Input message:\n")
 p = Plugboard(plaintext)
+p.plugboard()
