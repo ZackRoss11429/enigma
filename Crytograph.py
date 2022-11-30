@@ -8,6 +8,9 @@
 # allows the next rotor to move, the second rotor rotates by one. Same process for the third rotor. Afterwards,
 # it will go through the plugboard once more before appearing as the final letter in the lamp board
 
+import numpy as np
+
+
 class Plugboard:
     def __init__(self, plaintext):
 
@@ -36,41 +39,49 @@ class Plugboard:
     def plugboard(self):
         for i in range(0, len(self.plaintext)):
             self.plugboardtext[i] = self.pairs.get(plaintext[i])
-        return self.plugboardtext
-        print("Word after plugboard: " + ''.join(plugboardtext))
-        pass
-
+        return "Word after plugboard: " + ''.join(self.plugboardtext)
 
 
 class Rotors:
     def __init__(self, plugboardtext):
+        ciphers = {"I-K": "PEZUOHXSCVFMTBGLRINQJWAYDK", "II-K": "ZOUESYDKFWPCIQXHMVBLGNJRAT",
+                   "III-K": "EHRVXGAOBQUSIMZFLYNWKTPDJC", "UKW-K": "IMETCGFRAYSQBZXWLHKDVUPOJN",
+                   "ETW-K": "QWERTZUIOASDFGHJKPYXCVBNML"}
+
+        rotororder = ["III-K", "I-K", "ETW-K"]
+        ringsettings = [4, 2, 7]
+
+        for i in range(0, 3):
+            ciphers[rotororder[i - 1]] = ciphers[rotororder[i - 1]][-(ringsettings[i - 1]):] + \
+                                         ciphers[rotororder[i - 1]][:-(ringsettings[i - 1])]
+
+            print(ciphers[rotororder[i - 1]])
+
+        rotors = [("I-K", (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)),
+                  ("II-K", (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)),
+                  ("III-K", (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)),
+                  ("UKW-K", (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)),
+                  ("ETW-K", (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26))]
+
+        rotorpreset = [4, 6, 23]
+        rotateletter = 12
+
+        for j in range(0, 3):
+            print(rotors[j][0], rotororder[j])
+            #np.roll(rotors[rotors.index(rotororder[j-1])][1], rotorpreset[j-1])
+            #np.array(rotors)
+
+
         self.ciphers = ciphers
         self.rotororder = rotororder
-        self.ringsetting = ringsetting
+        self.ringsettings = ringsettings
         self.rotors = rotors
         self.rotorpreset = rotorpreset
         self.rotateletter = rotateletter
-
-        self.ciphers = {"I-K": "PEZUOHXSCVFMTBGLRINQJWAYDK", "II-K": "ZOUESYDKFWPCIQXHMVBLGNJRAT",
-                        "III-K": "EHRVXGAOBQUSIMZFLYNWKTPDJC", "UKW-K": "IMETCGFRAYSQBZXWLHKDVUPOJN",
-                        "ETW-K": "QWERTZUIOASDFGHJKPYXCVBNML"}
-
-        self.rotors = ((1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-                       (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26))
-
-        self.rotororder = ["III-K", "I-K", "ETW-K"]
-
-        self.ringsetting = 4
-
-        self.rotorpreset = [4, 6, 23]
-
-        self.rotateletter = 12
 
 
 # class Reflector:
 plaintext = input("Input message:\n")
 p = Plugboard(plaintext)
-p.plugboard()
+print(p.plugboard())
+r = Rotors(p.plugboardtext)
