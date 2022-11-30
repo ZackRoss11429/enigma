@@ -15,21 +15,24 @@ class Plugboard:
         pairs = {"a": "a", "b": "b", "c": "c", "d": "d", "e": "e", "f": "f", "g": "g", "h": "h", "i": "i",
                  "j": "j", "k": "k", "l": "l", "m": "m", "n": "n", "o": "o", "p": "p", "q": "q", "r": "r",
                  "s": "s", "t": "t", "u": "u", "v": "v", "w": "w", "x": "x", "y": "y", "z": "z"}
+        pairitems = list(pairs.keys())
 
         print(plaintext)
-        index = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9, "j": 10, "k": 11,
+        indexes = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9, "j": 10, "k": 11,
                  "l": 12, "m": 13, "n": 14, "o": 15, "p": 16, "q": 17, "r": 18, "s": 19, "t": 20, "u": 21,
                  "v": 22, "w": 23, "x": 24, "y": 25, "z": 26}
 
         plugboardconfig = "dcbawfqupyktzxoigrslhvenjm"
-
-        plaintext = ""
-
-        plugboardtext = ""
-
-    def plugboard(self, pairs):
         for i in range(1, 26):
-            print(self.pairs(i))
+            pairs[pairitems[i-1]] = plugboardconfig[i-1]
+
+    def plugboard(self, pairs, plugboardtext):
+        for i in range(0, len(plaintext)):
+            plugboardtext[i] = pairs[plaintext[i]]
+            print(plugboardtext)
+        return(plugboardtext)
+
+
 
     def __str__(self, plugboardtext):
         return "Word after plugboard:" f"{''.join(plugboardtext)}"
@@ -57,4 +60,5 @@ class Rotors:
 
 
 # class Reflector:
-p = Plugboard("hello")
+plaintext = input("Input message:\n")
+p = Plugboard(plaintext)
