@@ -24,12 +24,8 @@ class Plugboard:  # this creates the class of 'Plugboard', the first encryptor o
         # substituted.
         pairitems = list(pairs.keys())
 
-        indexes = {"a": 1, "b": 2, "c": 3, "d": 4, "e": 5, "f": 6, "g": 7, "h": 8, "i": 9, "j": 10, "k": 11,
-                   "l": 12, "m": 13, "n": 14, "o": 15, "p": 16, "q": 17, "r": 18, "s": 19, "t": 20, "u": 21,
-                   "v": 22, "w": 23, "x": 24, "y": 25, "z": 26}
-        #  This dictionary will equate each letter of the alphabet to its number position in the alphabet.
-
-        plugboardconfig = "dcbawfqupyktzxoigrslhvenjm"
+        # plugboardconfig = "dcbawfqupyktzxoigrslhvenjm"
+        plugboardconfig = "abcdefghijklmnopqrstuvwxyz"
         #  This plugboard configuration consisting of 10 pairs of letter substitutions
 
         plugboardtext = [None] * len(plaintext)
@@ -37,7 +33,6 @@ class Plugboard:  # this creates the class of 'Plugboard', the first encryptor o
 
         self.plaintext = plaintext
         self.pairs = pairs
-        self.indexes = indexes
         self.plugboardtext = plugboardtext
         self.pairitems = pairitems
         #  this just makes it easier to refer to each of the variables
@@ -56,57 +51,122 @@ class Plugboard:  # this creates the class of 'Plugboard', the first encryptor o
 
 class Rotors:  # this is the rotors class that will be the second section of encryption of the inputted text
     def __init__(self, plugboardtext):  # this initialises the variables necessary for using the rotors to encrypt
-        ciphers = {"I-K": "PEZUOHXSCVFMTBGLRINQJWAYDK", "II-K": "ZOUESYDKFWPCIQXHMVBLGNJRAT",
-                   "III-K": "EHRVXGAOBQUSIMZFLYNWKTPDJC", "UKW-K": "IMETCGFRAYSQBZXWLHKDVUPOJN",
-                   "ETW-K": "QWERTZUIOASDFGHJKPYXCVBNML"}
+        ciphers = {"I": "EKMFLGDQVZNTOWYHXUSPAIBRCJ", "II": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+                   "III": "BDFHJLCPRTXVZNYEIWGAKMUSQO", "IV": "ESOVPZJAYQUIRHXLNFTGKDCMWB",
+                   "V": "VZBRGITYUPSDNHLXAWMJQOFECK"}
         #  this is a dictionary of the different possible rotors to use. Each contain a different substitution cipher
         #  where every letter of the cipher refers to what position it's now holding in the alphabet
         #  (I-K's p is a, e is b etc.)
 
-        rotororder = ["III-K", "I-K", "ETW-K"]  # these are the three rotors that have been configured to be used for
+        rotororder = ["III", "II", "I"]  # these are the three rotors that have been configured to be used for
         # the encryption
 
-        ringsettings = [4, 2, 7]
+        ringsettings = [2, 1, 1]
         # this contains how many shifts the rotors will initially do as well as what they're configured to
-        # so if the first rotor is set to start at 5 while its ringsetting is 4, it'll start at 9.
+        # so if the first rotor is set to start at 5 while its ring setting is 4, it'll start at 9.
 
-        rotorpreset = [4, 6, 23]
+        rotorpreset = [26, 1, 1]
         # this is what each of the rotors are configured to start at (example: the first rotor shifts input of C to G)
 
         rotors = {
-            'I-K': (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-            'II-K': (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-            'III-K': (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-            'UKW-K': (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26),
-            'ETW-K': (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)}
+            'I': ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                  "u", "v", "w", "x", "y", "z"),
+            'II': ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                   "u", "v", "w", "x", "y", "z"),
+            'III': ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                    "u", "v", "w", "x", "y", "z"),
+            'IV': ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                   "u", "v", "w", "x", "y", "z"),
+            'V': ("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                  "u", "v", "w", "x", "y", "z")}
         # dictionary of all the rotors' sides where everytime one is turned which represents how much an inputted letter
         # is shifted. After every inputted letter, the rotor rotates by one so if it starts 6 it will go to 7 or at 26
         # will become 1 again
 
+        rotortext = []
+        backwardrotortext = []
 
-        for i in range(0, 3):
-            rotors[rotororder[i - 1]] = rotors[rotororder[i - 1]][-(ringsettings[i - 1]):] + \
-                                        rotors[rotororder[i - 1]][:-(ringsettings[i - 1])]
+        for i in range(3):
+            ciphers[rotororder[i]] = list(ciphers[rotororder[i]])
+            ciphers[rotororder[i]] = np.roll(ciphers[rotororder[i]], -(ringsettings[i] + 1))
+            ciphers[rotororder[i]] = ''.join(ciphers[rotororder[i]])
             # this will iteratively go through the 'rotororder' list to determine which rotor is being used, then it
-            # will then search the rotors list for that rotor name and then rotate its number list by one
+            # will then search the ciphers list for that rotor name and then rotate the cipher by the setting number
 
-            np.roll(rotors[rotororder[i]], -ringsettings[i])
-            rotors = dict(rotors)
+            rotors[rotororder[i]] = np.roll(rotors[rotororder[i]], -rotorpreset[i] + 1)
+            rotors[rotororder[i]] = list(rotors[rotororder[i]])
             # this will further shift the inputted letter by however much the ring is set to
             # a rotor configured to a 4 with a ring setting of 6, every letter inputted will be shifted by 10 letters
 
-
-        rotateletter = 12  # when the rotor is set the 12, the next rotor will rotated by 1
+        turnover = {'I': "q", 'II': "e", 'III': "v", 'IV': "j", 'V': "z"}  # there's a physical notch on each
+        # rotor that when rotated to will rotate the next rotor by one
+        # https://www.cryptomuseum.com/crypto/enigma/wiring.htm
 
         self.ciphers = ciphers
         self.rotororder = rotororder
         self.ringsettings = ringsettings
         self.rotors = rotors
         self.rotorpreset = rotorpreset
-        self.rotateletter = rotateletter
+        self.turnover = turnover
+        self.rotortext = rotortext
+        self.backwardrotortext = backwardrotortext
+
+    def rotor(self, plugboardtext, reflectortext, forward):
+        for x in range(2):
+            for j in range(3):
+                for i in range(len(plugboardtext)):
+                    self.rotors[self.rotororder[0]] = np.roll(self.rotors[self.rotororder[0]], -1)
+                    self.rotors[self.rotororder[0]] = list(self.rotors[self.rotororder[0]])
+                    # this will rotate the first rotor before the inputted text passes through
+                    if self.rotors[self.rotororder[0]][0] == self.turnover[self.rotororder[0]]:
+                        # this if statement will check if the first rotor has reached the turnover point and will rotate the
+                        # second rotor by one while rotating the first rotor again by one (double stepping)
+                        self.rotors[self.rotororder[0]] = np.roll(self.rotors[self.rotororder[0]], -1)
+                        self.rotors[self.rotororder[0]] = list(self.rotors[self.rotororder[0]])
+
+                        self.rotors[self.rotororder[1]] = np.roll(self.rotors[self.rotororder[1]], -1)
+                        self.rotors[self.rotororder[1]] = list(self.rotors[self.rotororder[1]])
+                        if self.rotors[self.rotororder[1]][0] == self.turnover[self.rotororder[1]]:
+                            # this if statement will check if the second rotor has reached the turnover point and will rotate
+                            # the third rotor by one while rotating the second rotor again by one (double stepping)
+                            self.rotors[self.rotororder[1]] = np.roll(self.rotors[self.rotororder[1]], -1)
+                            self.rotors[self.rotororder[1]] = list(self.rotors[self.rotororder[1]])
+
+                            self.rotors[self.rotororder[2]] = np.roll(self.rotors[self.rotororder[2]], -1)
+                            self.rotors[self.rotororder[2]] = list(self.rotors[self.rotororder[2]])
+
+                    alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
+                                   "s", "t", "u", "v", "w", "x", "y", "z"]
+                    if not forward:
+                        self.rotortext.append(self.ciphers[self.rotororder[j]][alphabetpos.index(plugboardtext[i])].lower())
+                        position = alphabetpos.index(self.rotortext[i+len(plugboardtext)*j])
+                        alphabetpos = np.roll(alphabetpos, -ord(self.rotors[self.rotororder[j]][0])-96)
+                        alphabetpos = list(alphabetpos)
+                        self.rotortext[i+len(plugboardtext)*j] = alphabetpos[position]
+
+                    #if forward:
+                     #   backwardrotortext.append(self.ciphers[])
+
+            forward = True
+
+        return "Word after rotor 1: " + ''.join(self.rotortext[:len(plugboardtext)]) + \
+               "\nWord after rotor 2: " + ''.join(self.rotortext[len(plugboardtext):len(plugboardtext)*2]) + \
+               "\nWord after rotor 3: " + ''.join(self.rotortext[(len(plugboardtext)*2):len(plugboardtext)*3])
 
 
-# class Reflector:
+class Reflector:
+    def __init__(self, rotortext):
+        UKWB = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+        ETW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        reflectortext = []
+
+        self.reflectortext = reflectortext
+        self.ETW = ETW
+        self.UKWB = UKWB
+
+    def reflector(self, rotortext):
+        for i in range()
+        return "hello"
 
 plaintext = input("Input message:\n")  # takes user input
 plaintext = ''.join(filter(str.isalpha, plaintext))
@@ -114,9 +174,17 @@ plaintext = ''.join(filter(str.isalpha, plaintext))
 plaintext = plaintext.lower()
 # this makes any uppercase character lowercase
 p = Plugboard(plaintext)
-p.plugboard()
 # this will run the Plugboard class with the user's input
 print(p.plugboard())
 # this prints what encrypted string by the plugboard outputs
-r = Rotors(p)
+forward = False
+r = Rotors(p.plugboardtext)
 # this runs the Rotors class using the output from the plugboard
+print(r.rotor(p.plugboardtext), forward)
+
+r.rotortext = r.rotortext[len(p.plugboardtext)*2:len(p.plugboardtext)*3]
+re = Reflector(r.rotortext)
+print(re.reflector(r.rotortext))
+
+r = Rotors(re.reflectortext, True)
+print(r.rotor(re.reflectortext), True)
