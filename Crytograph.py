@@ -113,19 +113,18 @@ class Rotors:  # this is the rotors class that will be the second section of enc
             self.backwardrotortext = backwardrotortext
 
     def rotor(self, plugboardtext, forward, reflectortext):
-        for x in range(2):
-            for j in range(3):
-                for i in range(len(plugboardtext)):
+        for j in range(3):
+            for i in range(len(plugboardtext)):
+                self.rotors[self.rotororder[0]] = np.roll(self.rotors[self.rotororder[0]], -1)
+                self.rotors[self.rotororder[0]] = list(self.rotors[self.rotororder[0]])
+                # this will rotate the first rotor before the inputted text passes through
+                if self.rotors[self.rotororder[0]][0] == self.turnover[self.rotororder[0]]:
+                    # this if statement will check if the first rotor has reached the turnover point and will rotate the
+                    # second rotor by one while rotating the first rotor again by one (double stepping)
                     self.rotors[self.rotororder[0]] = np.roll(self.rotors[self.rotororder[0]], -1)
                     self.rotors[self.rotororder[0]] = list(self.rotors[self.rotororder[0]])
-                    # this will rotate the first rotor before the inputted text passes through
-                    if self.rotors[self.rotororder[0]][0] == self.turnover[self.rotororder[0]]:
-                        # this if statement will check if the first rotor has reached the turnover point and will rotate the
-                        # second rotor by one while rotating the first rotor again by one (double stepping)
-                        self.rotors[self.rotororder[0]] = np.roll(self.rotors[self.rotororder[0]], -1)
-                        self.rotors[self.rotororder[0]] = list(self.rotors[self.rotororder[0]])
 
-                        self.rotors[self.rotororder[1]] = np.roll(self.rotors[self.rotororder[1]], -1)
+                    self.rotors[self.rotororder[1]] = np.roll(self.rotors[self.rotororder[1]], -1)
                         self.rotors[self.rotororder[1]] = list(self.rotors[self.rotororder[1]])
                         if self.rotors[self.rotororder[1]][0] == self.turnover[self.rotororder[1]]:
                             # this if statement will check if the second rotor has reached the turnover point and will rotate
@@ -146,12 +145,9 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                         self.rotortext[i+len(plugboardtext)*j] = alphabetpos[position]
 
                     if forward:
-                        j = 1 - j
-                        # j represents each rotor but instead of 0,1,2 it needs to go -1,-2,-3
-                        self.backwardrotortext.append(self.ciphers[self.rotororder[j]][alphabetpos.index(self.rotortext[i])].lower())
-
-                    # ITERATIVE BUT NEEDS TO BE COMPARED TO PREVIOUS ALPHABET (rotor 1 = alphabet, rotor2 = rotor1, rotor3 = rotor2
-
+                        self.backwardrotortext.append(self.ciphers[1-j])
+                        # 1-j
+            forward = True
 
         return "Word after rotor 1: " + ''.join(self.rotortext[:len(plugboardtext)]) + \
                "\nWord after rotor 2: " + ''.join(self.rotortext[len(plugboardtext):len(plugboardtext)*2]) + \
