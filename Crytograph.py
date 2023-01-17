@@ -146,9 +146,12 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                         self.rotortext[i+len(plugboardtext)*j] = alphabetpos[position]
 
                     if forward:
-                        self.backwardrotortext.append(self.ciphers[])
+                        j = 1 - j
+                        # j represents each rotor but instead of 0,1,2 it needs to go -1,-2,-3
+                        self.backwardrotortext.append(self.ciphers[self.rotororder[j]][alphabetpos.index(self.rotortext[i])].lower())
 
-            forward = True
+                    # ITERATIVE BUT NEEDS TO BE COMPARED TO PREVIOUS ALPHABET (rotor 1 = alphabet, rotor2 = rotor1, rotor3 = rotor2
+                    
 
         return "Word after rotor 1: " + ''.join(self.rotortext[:len(plugboardtext)]) + \
                "\nWord after rotor 2: " + ''.join(self.rotortext[len(plugboardtext):len(plugboardtext)*2]) + \
