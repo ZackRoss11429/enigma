@@ -1,12 +1,3 @@
-# pairs then it will be replaced as the other letter of its pair 5 rotors that each have a substitution cipher (
-# reordering of the alphabet). 3 can be chosen and placed in any order. Each rotor have 26 letters to shift the
-# inputted letter to depending on what the rotor index is set to Ring settings which decides what order the
-# substitution cipher starts in Inputted letter is shifted first, substituted then placed into the next rotor. When a
-# letter has passed through the rotors, it will go through the reflector's substitution cipher then ran backwards
-# through the rotors Once that process is done, the first rotor will rotate by one. After it reaches the letter which
-# allows the next rotor to move, the second rotor rotates by one. Same process for the third rotor. Afterwards,
-# it will go through the plugboard once more before appearing as the final letter in the lamp board
-
 import numpy as np
 
 
@@ -59,7 +50,10 @@ class Plugboard:  # this creates the class of 'Plugboard', the first encryptor o
 
         if self.plugboardpass:
             return "Word after final plugboard: " + ''.join(self.finaltext)
-        #  when the program is run and this function is called, it will return the now encrypted input, 'plugboardtext'
+        #  when this function is ran, if plugboardpass is false, that indicates the plugboard is being used for
+        # encrypting the plaintext. If plugboardpass is true, that indicates the plugboard is being used for encrypting
+        # the backwardrotortext. 
+        # this will substitute each letter for its letter pair set in the plugboard.
 
 
 class Rotors:  # this is the rotors class that will be the second section of encryption of the inputted text
@@ -117,11 +111,15 @@ class Rotors:  # this is the rotors class that will be the second section of enc
         # to a 4 with a ring setting of 6, every letter inputted will be shifted by 10 letters
 
     turnover = {'I': "q", 'II': "e", 'III': "v", 'IV': "j", 'V': "z"}  # there's a physical notch on each
-
     # rotor that when rotated to will rotate the next rotor by one
 
     shifts = [[], [], []]
     ciphershifts = [[], [], []]
+
+    # the order of the enigma goes plugboard, rotors, reflector, backwards through rotors, plugboard. Because the rotors
+    # and ciphers will only rotate on the first use of the rotor function, when the function is rerun after the
+    # reflector, the inputted letters won't be shifted by the correct amount so both of these lists will store the
+    # correct amount each letter and cipher needs to be shifted.
 
     def __init__(self, plugboardtext, backward, reflectortext):
         # this initialises the variables necessary for using the rotors to encrypt
@@ -136,10 +134,17 @@ class Rotors:  # this is the rotors class that will be the second section of enc
         self.shifts = Rotors.shifts
         self.ciphershifts = Rotors.ciphershifts
 
+        # these variable names are the only thing being initialised as otherwise every list and dictionary will reset
+        # to default after this class is called again when it needs to keep its settings for when the input goes
+        # backwards through the rotors
+
     def rotor(self, plugboardtext, backward, reflectortext):
         alphabetpos = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
                        "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-        if not backward:
+        # this list will be used to compare the position of the letters in here to the position of the letters in each
+        # rotor's ciphers so then the input can be properly substituted.
+
+        if not backward:  # this determines whether the rotors are being used forwards or backwards
             for i in range(len(plugboardtext)):
                 self.rotors[self.rotororder[0]] = np.roll(self.rotors[self.rotororder[0]], -1)
                 self.rotors[self.rotororder[0]] = list(self.rotors[self.rotororder[0]])
@@ -150,6 +155,7 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                 if self.rotors[self.rotororder[0]][0] == self.turnover[self.rotororder[0]]:
                     # this if statement will check if the first rotor has reached the turnover point and will rotate the
                     # second rotor by one while rotating the first rotor again by one (double stepping)
+                    # it does the same for ciphers
                     self.rotors[self.rotororder[0]] = np.roll(self.rotors[self.rotororder[0]], -1)
                     self.rotors[self.rotororder[0]] = list(self.rotors[self.rotororder[0]])
 
@@ -159,8 +165,9 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                     self.ciphers[self.rotororder[1]] = np.roll(self.ciphers[self.rotororder[1]], -1)
                     self.ciphers[self.rotororder[1]] = list(self.ciphers[self.rotororder[1]])
                     if self.rotors[self.rotororder[1]][0] == self.turnover[self.rotororder[1]]:
-                        # this if statement will check if the second rotor has reached the turnover point and will rotate
-                        # the third rotor by one while rotating the second rotor again by one (double stepping)
+                        # this if statement will check if the second rotor has reached the turnover point and will 
+                        # rotate the third rotor by one while rotating the second rotor again by one (double 
+                        # stepping) it does the same for the ciphers 
                         self.rotors[self.rotororder[1]] = np.roll(self.rotors[self.rotororder[1]], -1)
                         self.rotors[self.rotororder[1]] = list(self.rotors[self.rotororder[1]])
 
@@ -176,6 +183,8 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                 self.ciphershifts[1].append(self.ciphers[self.rotororder[1]][0])
                 self.shifts[2].append(self.rotors[self.rotororder[2]][0])
                 self.ciphershifts[2].append(self.ciphers[self.rotororder[2]][0])
+                # each time the rotors rotate, their position will be appended into the shifts and ciphershifts list
+                # for when the input goes backwards through the rotors later
 
                 for j in range(3):
                     self.rotortext.append(self.ciphers[self.rotororder[j]][alphabetpos.index(plugboardtext[i])].lower())
@@ -183,14 +192,18 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                     alphabetpos = np.roll(alphabetpos, -ord(self.rotors[self.rotororder[j]][0]) - 97)
                     alphabetpos = list(alphabetpos)
                     self.rotortext[len(self.rotortext) - 1] = alphabetpos[position]
+                    # this will append to rotortext the letter in the correct rotor's cipher that's in the same position
+                    # as what the inputted letter would be in the alphabet (so an E in the alphabet is 5 so the 5th
+                    # letter of the rotor's cipher)
 
             return "Word after rotor 1: " + ''.join(self.rotortext[:len(plugboardtext)]) + \
                    "\nWord after rotor 2: " + ''.join(self.rotortext[len(plugboardtext):len(plugboardtext) * 2]) + \
                    "\nWord after rotor 3: " + ''.join(self.rotortext[len(plugboardtext) * 2:len(plugboardtext) * 3])
+            # this will return each word after it's been encrypted through each rotor the first time.
 
-        if backward:
-            for i in range(len(reflectortext)):
-                for j in range(2, 0, -1):
+        if backward:  # this is when the rotor class is ran to simulate the input going backwards through the rotors
+            for i in range(len(reflectortext)):  # iterates for every letter
+                for j in range(2, 0, -1):  # iterates for every rotor it goes through
                     position = alphabetpos.index(reflectortext[i])
                     alphabetpos = np.roll(alphabetpos, -ord(self.shifts[j][i]) - 97)
                     alphabetpos = list(alphabetpos)
@@ -200,12 +213,15 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                     self.backwardrotortext.append(alphabetpos[position])
                     self.backwardrotortext.append(self.ciphers[self.rotororder[j]][alphabetpos.index(
                         self.backwardrotortext[len(self.backwardrotortext) - 1])].lower())
+                    # when the input goes forwards through the rotor, it will shift and then substitute but when the
+                    # input is going back through the rotor, it will be substituted then shifted.
 
             return "Word after returning through rotor 3: " + ''.join(self.backwardrotortext[:len(reflectortext)]) + \
                    "\nWord after returning through rotor 2: " + ''.join(
                 self.backwardrotortext[len(reflectortext):len(reflectortext) * 2]) + \
                    "\nWord after returning through rotor 1: " + ''.join(
                 self.backwardrotortext[len(reflectortext) * 2:len(reflectortext) * 3])
+            # this returns the encrypted version of the input after it's gone through each of the rotors.
 
 
 class Reflector:
@@ -222,6 +238,10 @@ class Reflector:
         for i in range(len(rotortext)):
             self.reflectortext.append(self.ukwb[self.etw.index(rotortext[i].upper())].lower())
         return "Word after reflector: " + ''.join(self.reflectortext)
+    
+    # very simple reflector where every letter input will be substituted for its given letter pair. This method will
+    # compare the position of the input in the alphabet (ETW) with what letter is in the same position in the pair list
+    # (UKW-B)
 
 
 plaintext = input("Input message:\n")  # takes user input
@@ -237,13 +257,18 @@ r = Rotors(p.plugboardtext, False, [])
 # this runs the Rotors class using the output from the plugboard
 print(r.rotor(p.plugboardtext, False, []))
 
-r.rotortext = r.rotortext[len(p.plugboardtext) * 2:len(p.plugboardtext) * 3]
-re = Reflector(r.rotortext)
+r.rotortext = r.rotortext[len(p.plugboardtext) * 2:len(p.plugboardtext) * 3]  # rotortext will have every output of 
+# each rotor so the final result will be at the end of the list so the rest will be removed.
+re = Reflector(r.rotortext)  # this runs the reflector by inputting the rotortext
 print(re.reflector(r.rotortext))
 
-r = Rotors(p.plugboardtext, True, re.reflectortext)
+r = Rotors(p.plugboardtext, True, re.reflectortext)  # this runs the rotor function where backwards is set to True so
+# that the input will go through the rotors backwards
 print(r.rotor(p.plugboardtext, True, re.reflectortext))
 
 r.backwardrotortext = r.backwardrotortext[len(re.reflectortext) * 2:len(re.reflectortext) * 3]
 p = Plugboard(plaintext, r.backwardrotortext, True)
 print(p.plugboard(plaintext, r.backwardrotortext, True))
+# this removes the first two rotors' outputs from the backwardrotortext so the list can be ran through the plugboard
+# one last time
+
