@@ -1,8 +1,5 @@
 import numpy as np
-
-
 # this module will be essential for rotating lists of variables/objects
-
 
 class Plugboard:  # this creates the class of 'Plugboard', the first encryptor of the input text
     def __init__(self, plaintext, backwardrotortext,
@@ -52,7 +49,7 @@ class Plugboard:  # this creates the class of 'Plugboard', the first encryptor o
             return "Word after final plugboard: " + ''.join(self.finaltext)
         #  when this function is ran, if plugboardpass is false, that indicates the plugboard is being used for
         # encrypting the plaintext. If plugboardpass is true, that indicates the plugboard is being used for encrypting
-        # the backwardrotortext. 
+        # the backwardrotortext.
         # this will substitute each letter for its letter pair set in the plugboard.
 
 
@@ -165,9 +162,9 @@ class Rotors:  # this is the rotors class that will be the second section of enc
                     self.ciphers[self.rotororder[1]] = np.roll(self.ciphers[self.rotororder[1]], -1)
                     self.ciphers[self.rotororder[1]] = list(self.ciphers[self.rotororder[1]])
                     if self.rotors[self.rotororder[1]][0] == self.turnover[self.rotororder[1]]:
-                        # this if statement will check if the second rotor has reached the turnover point and will 
-                        # rotate the third rotor by one while rotating the second rotor again by one (double 
-                        # stepping) it does the same for the ciphers 
+                        # this if statement will check if the second rotor has reached the turnover point and will
+                        # rotate the third rotor by one while rotating the second rotor again by one (double
+                        # stepping) it does the same for the ciphers
                         self.rotors[self.rotororder[1]] = np.roll(self.rotors[self.rotororder[1]], -1)
                         self.rotors[self.rotororder[1]] = list(self.rotors[self.rotororder[1]])
 
@@ -238,7 +235,7 @@ class Reflector:
         for i in range(len(rotortext)):
             self.reflectortext.append(self.ukwb[self.etw.index(rotortext[i].upper())].lower())
         return "Word after reflector: " + ''.join(self.reflectortext)
-    
+
     # very simple reflector where every letter input will be substituted for its given letter pair. This method will
     # compare the position of the input in the alphabet (ETW) with what letter is in the same position in the pair list
     # (UKW-B)
@@ -257,7 +254,7 @@ r = Rotors(p.plugboardtext, False, [])
 # this runs the Rotors class using the output from the plugboard
 print(r.rotor(p.plugboardtext, False, []))
 
-r.rotortext = r.rotortext[len(p.plugboardtext) * 2:len(p.plugboardtext) * 3]  # rotortext will have every output of 
+r.rotortext = r.rotortext[len(p.plugboardtext) * 2:len(p.plugboardtext) * 3]  # rotortext will have every output of
 # each rotor so the final result will be at the end of the list so the rest will be removed.
 re = Reflector(r.rotortext)  # this runs the reflector by inputting the rotortext
 print(re.reflector(r.rotortext))
